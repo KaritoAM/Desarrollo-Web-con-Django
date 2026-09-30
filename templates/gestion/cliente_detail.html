@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}{{ cliente.nombre }}{% endblock %}
+{% block contenido %}
+<div class="cabecera">
+  <div><h1>{{ cliente.nombre }}</h1><p class="sub">Cliente desde {{ cliente.fecha_registro|date:"d/m/Y" }}</p></div>
+  <div class="acciones">
+    <a class="btn btn--sec" href="{% url 'gestion:cliente_editar' cliente.pk %}">Editar</a>
+    {% if user.is_staff %}<a class="btn btn--peligro" href="{% url 'gestion:cliente_eliminar' cliente.pk %}">Eliminar</a>{% endif %}
+  </div>
+</div>
+<div class="panel">
+  <dl class="datos">
+    <dt>Correo</dt><dd>{{ cliente.email }}</dd>
+    <dt>Teléfono</dt><dd>{{ cliente.telefono|default:"Sin teléfono" }}</dd>
+    <dt>Usuario</dt><dd>{{ cliente.usuario|default:"Sin usuario asociado" }}</dd>
+    <dt>Favoritos</dt><dd>{% for f in favoritos %}{{ f.nombre }}{% if not forloop.last %}, {% endif %}{% empty %}Ninguno{% endfor %}</dd>
+  </dl>
+</div>
+<div class="panel panel--tabla">
+  <h2>Cuentas</h2>
+  {% if cuentas %}
+  <table>
+    <thead><tr><th>Número</th><th>Tipo</th><th class="der">Saldo</th></tr></thead>
+    <tbody>{% for c in cuentas %}
+      <tr><td><a href="{{ c.get_absolute_url }}">{{ c.numero }}</a></td><td>{{ c.get_tipo_display }}</td><td class="der num">{{ c.saldo|floatformat:"2g" }} {{ c.moneda }}</td></tr>
+    {% endfor %}</tbody>
+  </table>
+  {% else %}<p class="vacio">Este cliente no tiene cuentas.</p>{% endif %}
+</div>
+{% endblock %}

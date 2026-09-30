@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo %}Cuenta {{ cuenta.numero }}{% endblock %}
+{% block contenido %}
+<div class="cabecera">
+  <div><h1 class="num">{{ cuenta.saldo|floatformat:"2g" }} {{ cuenta.moneda }}</h1><p class="sub">Cuenta {{ cuenta.numero }} · {{ cuenta.get_tipo_display }}</p></div>
+  <div class="acciones">
+    <a class="btn" href="{% url 'gestion:transaccion_crear' %}">Nueva transacción</a>
+    <a class="btn btn--sec" href="{% url 'gestion:cuenta_editar' cuenta.pk %}">Editar</a>
+    <a class="btn btn--peligro" href="{% url 'gestion:cuenta_eliminar' cuenta.pk %}">Eliminar</a>
+  </div>
+</div>
+<div class="panel">
+  <dl class="datos">
+    <dt>Titular</dt><dd><a href="{{ cuenta.cliente.get_absolute_url }}">{{ cuenta.cliente }}</a></dd>
+    <dt>Estado</dt><dd>{% if cuenta.activa %}Activa{% else %}Inactiva{% endif %}</dd>
+    <dt>Creada</dt><dd>{{ cuenta.creada|date:"d/m/Y" }}</dd>
+  </dl>
+</div>
+<div class="panel panel--tabla">
+  <h2>Últimos movimientos</h2>
+  {% if movimientos %}
+  <table>
+    <thead><tr><th>Fecha</th><th>Detalle</th><th class="der">Monto</th></tr></thead>
+    <tbody>{% for m in movimientos %}
+      <tr>
+        <td>{{ m.fecha|date:"d/m/Y H:i" }}</td>
+        <td><a href="{{ m.get_absolute_url }}">{{ m.get_tipo_display }}</a>{% if m.descripcion %} · {{ m.descripcion }}{% endif %}</td>
+        <td class="der num">{% if m.cuenta_destino_id == cuenta.pk %}<span class="entra">+{{ m.monto|floatformat:"2g" }}</span>{% else %}<span class="sale">−{{ m.monto|floatformat:"2g" }}</span>{% endif %}</td>
+      </tr>
+    {% endfor %}</tbody>
+  </table>
+  {% else %}<p class="vacio">Esta cuenta aún no tiene movimientos.</p>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio{% endblock %}
+{% block contenido %}
+{% if not tiene_cliente %}
+<p class="aviso">Tu usuario todavía no está asociado a un cliente. Pide a un administrador que lo vincule para poder crear cuentas.</p>
+{% endif %}
+
+<div class="saldo">
+  <p>Saldo disponible</p>
+  <div class="saldo__cifras num">
+    {% for t in totales %}
+      <div class="saldo__cifra">{{ t.total|floatformat:"2g" }}<span class="saldo__moneda">{{ t.moneda }}</span></div>
+    {% empty %}
+      <div class="saldo__cifra">0,00<span class="saldo__moneda">CLP</span></div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="acciones" style="margin-bottom:1.25rem">
+  <a class="btn" href="{% url 'gestion:transaccion_crear' %}">Nueva transacción</a>
+  <a class="btn btn--sec" href="{% url 'gestion:cuenta_crear' %}">Nueva cuenta</a>
+</div>
+
+<div class="rejilla">
+  <section class="panel panel--tabla">
+    <h2>Tus cuentas</h2>
+    {% if cuentas %}
+    <table>
+      <thead><tr><th>Cuenta</th><th class="der">Saldo</th></tr></thead>
+      <tbody>
+      {% for c in cuentas %}
+        <tr>
+          <td><a href="{{ c.get_absolute_url }}">{{ c.numero }}</a><br><small>{{ c.get_tipo_display }}{% if user.is_staff %} · {{ c.cliente }}{% endif %}</small></td>
+          <td class="der num">{{ c.saldo|floatformat:"2g" }} {{ c.moneda }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="vacio">Aún no tienes cuentas. Crea la primera para empezar a operar.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel panel--tabla">
+    <h2>Últimos movimientos</h2>
+    {% if recientes %}
+    <table>
+      <thead><tr><th>Movimiento</th><th class="der">Monto</th></tr></thead>
+      <tbody>
+      {% for t in recientes %}
+        <tr>
+          <td><a href="{{ t.get_absolute_url }}">{{ t.get_tipo_display }}</a><br><small>{{ t.fecha|date:"d/m/Y H:i" }}</small></td>
+          <td class="der num">{{ t.monto|floatformat:"2g" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="vacio">Todavía no hay movimientos.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block titulo %}Crear usuario{% endblock %}
+{% block contenido %}
+<div class="acceso panel">
+  <h1>Crear usuario</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "gestion/_campos.html" %}
+    <button class="btn" type="submit">Crear usuario</button>
+    <p class="ayuda">¿Ya tienes usuario? <a href="{% url 'login' %}">Inicia sesión</a>.</p>
+  </form>
+</div>
+{% endblock %}

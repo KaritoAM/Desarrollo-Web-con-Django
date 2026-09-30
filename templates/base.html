@@ -1,0 +1,45 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Alke Wallet{% endblock %} · Alke Wallet</title>
+  <link rel="stylesheet" href="{% static 'css/alke.css' %}">
+</head>
+<body>
+  <header class="barra">
+    <div class="barra__interior">
+      <a class="marca" href="{% url 'gestion:inicio' %}">Alke Wallet</a>
+      {% if user.is_authenticated %}
+      {% with ruta=request.resolver_match.url_name %}
+      <nav aria-label="Principal">
+        <a href="{% url 'gestion:inicio' %}" {% if ruta == 'inicio' %}aria-current="page"{% endif %}>Inicio</a>
+        <a href="{% url 'gestion:cuenta_lista' %}" {% if 'cuenta' in ruta %}aria-current="page"{% endif %}>Cuentas</a>
+        <a href="{% url 'gestion:transaccion_lista' %}" {% if 'transaccion' in ruta %}aria-current="page"{% endif %}>Transacciones</a>
+        <a href="{% url 'gestion:cliente_lista' %}" {% if 'cliente' in ruta %}aria-current="page"{% endif %}>Clientes</a>
+        {% if user.is_staff %}
+        <a href="{% url 'gestion:reportes' %}" {% if ruta == 'reportes' %}aria-current="page"{% endif %}>Reportes</a>
+        <a href="{% url 'admin:index' %}">Administración</a>
+        {% endif %}
+      </nav>
+      {% endwith %}
+      <div class="barra__usuario">
+        <span>{{ user.get_username }}</span>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="btn btn--chico btn--fantasma" type="submit">Cerrar sesión</button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+  <main>
+    {% if messages %}
+    <ul class="mensajes" role="status">
+      {% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% block contenido %}{% endblock %}
+  </main>
+</body>
+</html>

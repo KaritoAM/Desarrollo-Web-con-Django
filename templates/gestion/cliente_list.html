@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Clientes{% endblock %}
+{% block contenido %}
+<div class="cabecera">
+  <div><h1>Clientes</h1><p class="sub">{% if user.is_staff %}Todos los clientes registrados.{% else %}Tu perfil de cliente.{% endif %}</p></div>
+  {% if user.is_staff %}<a class="btn" href="{% url 'gestion:cliente_crear' %}">Nuevo cliente</a>{% endif %}
+</div>
+{% if user.is_staff %}
+<form method="get" class="panel filtros" role="search">
+  <div><label for="q">Buscar por nombre o correo</label><input id="q" name="q" type="text" value="{{ request.GET.q }}"></div>
+  <div><button class="btn btn--sec" type="submit">Buscar</button></div>
+</form>
+{% endif %}
+<div class="panel panel--tabla">
+  {% if clientes %}
+  <table>
+    <thead><tr><th>Nombre</th><th>Correo</th><th class="der">Cuentas</th><th class="der">Saldo total</th><th></th></tr></thead>
+    <tbody>
+    {% for c in clientes %}
+      <tr>
+        <td><a href="{{ c.get_absolute_url }}">{{ c.nombre }}</a></td>
+        <td>{{ c.email }}</td>
+        <td class="der num">{{ c.num_cuentas }}</td>
+        <td class="der num">{{ c.saldo_total|floatformat:"2g" }}</td>
+        <td class="der"><a class="btn btn--sec btn--chico" href="{% url 'gestion:cliente_editar' c.pk %}">Editar</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p class="vacio">No hay clientes para mostrar.</p>{% endif %}
+</div>
+{% include "gestion/_paginacion.html" %}
+{% endblock %}

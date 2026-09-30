@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}Cuentas{% endblock %}
+{% block contenido %}
+<div class="cabecera">
+  <div><h1>Cuentas</h1><p class="sub">Saldos y estado de cada cuenta.</p></div>
+  <a class="btn" href="{% url 'gestion:cuenta_crear' %}">Nueva cuenta</a>
+</div>
+<div class="panel panel--tabla">
+  {% if cuentas %}
+  <table>
+    <thead><tr><th>Número</th><th>Titular</th><th>Tipo</th><th>Estado</th><th class="der">Saldo</th></tr></thead>
+    <tbody>{% for c in cuentas %}
+      <tr>
+        <td><a href="{{ c.get_absolute_url }}">{{ c.numero }}</a></td>
+        <td>{{ c.cliente }}</td>
+        <td>{{ c.get_tipo_display }}</td>
+        <td>{% if c.activa %}<span class="etiqueta etiqueta--ok">Activa</span>{% else %}<span class="etiqueta etiqueta--off">Inactiva</span>{% endif %}</td>
+        <td class="der num">{{ c.saldo|floatformat:"2g" }} {{ c.moneda }}</td>
+      </tr>
+    {% endfor %}</tbody>
+  </table>
+  {% else %}<p class="vacio">No hay cuentas. Crea la primera con «Nueva cuenta».</p>{% endif %}
+</div>
+{% include "gestion/_paginacion.html" %}
+{% endblock %}

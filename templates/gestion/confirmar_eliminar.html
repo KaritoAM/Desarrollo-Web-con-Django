@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Eliminar{% endblock %}
+{% block contenido %}
+<h1>Eliminar {{ object }}</h1>
+<div class="panel formulario">
+  <p>Esta acción no se puede deshacer. ¿Quieres eliminar <strong>{{ object }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="acciones">
+      <button class="btn btn--peligro" type="submit">Sí, eliminar</button>
+      <a class="btn btn--sec" href="{{ object.get_absolute_url }}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

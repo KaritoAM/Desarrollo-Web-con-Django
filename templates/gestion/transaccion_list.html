@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}Transacciones{% endblock %}
+{% block contenido %}
+<div class="cabecera">
+  <div><h1>Transacciones</h1><p class="sub">Historial de depósitos, retiros y transferencias.</p></div>
+  <a class="btn" href="{% url 'gestion:transaccion_crear' %}">Nueva transacción</a>
+</div>
+<form method="get" class="panel filtros" aria-label="Filtros">
+  <div><label for="{{ filtro.tipo.id_for_label }}">Tipo</label>{{ filtro.tipo }}</div>
+  <div><label for="{{ filtro.desde.id_for_label }}">Desde</label>{{ filtro.desde }}</div>
+  <div><label for="{{ filtro.hasta.id_for_label }}">Hasta</label>{{ filtro.hasta }}</div>
+  <div><label for="{{ filtro.monto_minimo.id_for_label }}">Monto mínimo</label>{{ filtro.monto_minimo }}</div>
+  <div class="acciones"><button class="btn btn--sec" type="submit">Filtrar</button><a class="btn btn--sec" href="{% url 'gestion:transaccion_lista' %}">Limpiar</a></div>
+</form>
+<div class="panel panel--tabla">
+  {% if transacciones %}
+  <table>
+    <thead><tr><th>Fecha</th><th>Tipo</th><th>Origen</th><th>Destino</th><th class="der">Monto</th></tr></thead>
+    <tbody>{% for t in transacciones %}
+      <tr>
+        <td>{{ t.fecha|date:"d/m/Y H:i" }}</td>
+        <td><a href="{{ t.get_absolute_url }}">{{ t.get_tipo_display }}</a></td>
+        <td>{{ t.cuenta_origen.numero|default:"—" }}</td>
+        <td>{{ t.cuenta_destino.numero|default:"—" }}</td>
+        <td class="der num">{{ t.monto|floatformat:"2g" }}</td>
+      </tr>
+    {% endfor %}</tbody>
+  </table>
+  {% else %}<p class="vacio">No hay transacciones que coincidan.</p>{% endif %}
+</div>
+{% include "gestion/_paginacion.html" %}
+{% endblock %}

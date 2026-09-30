@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block titulo %}Reportes{% endblock %}
+{% block contenido %}
+<div class="cabecera"><div><h1>Reportes</h1><p class="sub">Consultas con SQL propio (raw y cursor) y anotaciones del ORM.</p></div></div>
+
+<div class="rejilla">
+  <section class="panel panel--tabla">
+    <h2>Ranking de clientes por saldo <small>(raw)</small></h2>
+    <table>
+      <thead><tr><th>Cliente</th><th class="der">Saldo total</th></tr></thead>
+      <tbody>{% for c in ranking %}
+        <tr><td>{{ c.nombre }}</td><td class="der num">{{ c.saldo_total|floatformat:"2g" }}</td></tr>
+      {% empty %}<tr><td colspan="2" class="vacio">Sin datos.</td></tr>{% endfor %}</tbody>
+    </table>
+  </section>
+
+  <section class="panel panel--tabla">
+    <h2>Movimientos por tipo <small>(cursor)</small></h2>
+    <table>
+      <thead><tr><th>Tipo</th><th class="der">Cantidad</th><th class="der">Monto</th></tr></thead>
+      <tbody>{% for r in resumen_tipos %}
+        <tr><td>{{ r.tipo }}</td><td class="der num">{{ r.cantidad }}</td><td class="der num">{{ r.monto|floatformat:"2g" }}</td></tr>
+      {% empty %}<tr><td colspan="3" class="vacio">Sin datos.</td></tr>{% endfor %}</tbody>
+    </table>
+  </section>
+
+  <section class="panel panel--tabla">
+    <h2>Cuentas con más movimientos <small>(annotate)</small></h2>
+    <table>
+      <thead><tr><th>Cuenta</th><th class="der">Entradas</th><th class="der">Salidas</th></tr></thead>
+      <tbody>{% for c in cuentas_activas %}
+        <tr><td><a href="{{ c.get_absolute_url }}">{{ c.numero }}</a><br><small>{{ c.cliente }}</small></td><td class="der num">{{ c.num_entradas }}</td><td class="der num">{{ c.num_salidas }}</td></tr>
+      {% empty %}<tr><td colspan="3" class="vacio">Sin datos.</td></tr>{% endfor %}</tbody>
+    </table>
+  </section>
+
+  <section class="panel panel--tabla">
+    <h2>Clientes sin movimientos <small>(exclude)</small></h2>
+    <table>
+      <tbody>{% for c in sin_movimientos %}
+        <tr><td><a href="{{ c.get_absolute_url }}">{{ c.nombre }}</a></td><td>{{ c.email }}</td></tr>
+      {% empty %}<tr><td class="vacio">Todos los clientes han operado.</td></tr>{% endfor %}</tbody>
+    </table>
+  </section>
+</div>
+
+<section class="panel panel--tabla" style="margin-top:1.25rem">
+  <h2>Resumen por cliente <small>(annotate: Count y Sum)</small></h2>
+  <table>
+    <thead><tr><th>Cliente</th><th class="der">Cuentas</th><th class="der">Saldo total</th></tr></thead>
+    <tbody>{% for c in resumen_clientes %}
+      <tr><td><a href="{{ c.get_absolute_url }}">{{ c.nombre }}</a></td><td class="der num">{{ c.num_cuentas }}</td><td class="der num">{{ c.saldo_total|floatformat:"2g" }}</td></tr>
+    {% empty %}<tr><td colspan="3" class="vacio">Sin clientes.</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endblock %}

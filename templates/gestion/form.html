@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<h1>{{ titulo }}</h1>
+<div class="panel formulario">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "gestion/_campos.html" %}
+    <div class="acciones">
+      <button class="btn" type="submit">{{ boton }}</button>
+      <a class="btn btn--sec" href="{{ volver }}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

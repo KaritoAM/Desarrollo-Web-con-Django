@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Transacción #{{ transaccion.pk }}{% endblock %}
+{% block contenido %}
+<div class="cabecera">
+  <div><h1 class="num">{{ transaccion.monto|floatformat:"2g" }}</h1><p class="sub">{{ transaccion.get_tipo_display }} #{{ transaccion.pk }}</p></div>
+  <a class="btn btn--sec" href="{% url 'gestion:transaccion_lista' %}">Volver al historial</a>
+</div>
+<div class="panel">
+  <dl class="datos">
+    <dt>Fecha</dt><dd>{{ transaccion.fecha|date:"d/m/Y H:i" }}</dd>
+    <dt>Origen</dt><dd>{% if transaccion.cuenta_origen %}{{ transaccion.cuenta_origen.numero }} ({{ transaccion.cuenta_origen.cliente }}){% else %}—{% endif %}</dd>
+    <dt>Destino</dt><dd>{% if transaccion.cuenta_destino %}{{ transaccion.cuenta_destino.numero }} ({{ transaccion.cuenta_destino.cliente }}){% else %}—{% endif %}</dd>
+    <dt>Descripción</dt><dd>{{ transaccion.descripcion|default:"Sin descripción" }}</dd>
+  </dl>
+</div>
+{% endblock %}
