@@ -46,7 +46,7 @@ python manage.py createsuperuser  # opcional
 python manage.py runserver
 ```
 
-Abre <http://127.0.0.1:8000/>. Con `cargar_datos_demo` quedan estos usuarios:
+Abrir <http://127.0.0.1:8000/>. Con `cargar_datos_demo` quedan estos usuarios:
 
 | Usuario | Contraseña | Rol |
 |---|---|---|
