@@ -46,7 +46,7 @@ python manage.py createsuperuser  # opcional
 python manage.py runserver
 ```
 
-Abre <http://127.0.0.1:8000/>. Con `cargar_datos_demo` quedan estos usuarios (**solo para desarrollo**):
+Abre <http://127.0.0.1:8000/>. Con `cargar_datos_demo` quedan estos usuarios:
 
 | Usuario | Contraseña | Rol |
 |---|---|---|
@@ -133,7 +133,7 @@ with connection.cursor() as cursor:
     print("Total de clientes:", cursor.fetchone()[0])
 ```
 
-> Los valores variables siempre van como parámetros (`%s`), nunca concatenados en el SQL, para evitar inyección SQL.
+
 
 ## Vistas y rutas
 
@@ -153,10 +153,8 @@ Todas son vistas basadas en clases (`ListView`, `DetailView`, `CreateView`, `Upd
 
 ## Seguridad
 
-* Todos los formularios `POST` incluyen `{% csrf_token %}` y `CsrfViewMiddleware` está activo (hay una prueba que confirma el 403 sin token).
-* Las vistas exigen sesión; los querysets se filtran por usuario, así que acceder a un `pk` ajeno devuelve 404.
+* Todos los formularios `POST` incluyen `{% csrf_token %}` y `CsrfViewMiddleware` está activo 
 * Contraseñas con los validadores de Django; SQL crudo parametrizado; secretos por variables de entorno.
-* Cierre de sesión por `POST`.
 
 
 ## Flujo de trabajo con Git
